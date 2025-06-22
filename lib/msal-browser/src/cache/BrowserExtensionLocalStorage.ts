@@ -91,7 +91,6 @@ export class BrowserExtensionLocalStorage extends LocalStorage {
      * Removes all known MSAL keys from the cache
      */
     override clear(): void {
-        this.ensureInitialized();
         this.memoryStorage.clear();
         this.allSettings = {};
 
