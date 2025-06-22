@@ -5,10 +5,6 @@
 
 import { IPerformanceClient, Logger } from "@azure/msal-common";
 import { LocalStorage } from "./LocalStorage.js";
-import {
-    BrowserAuthErrorCodes,
-    createBrowserAuthError,
-} from "../error/BrowserAuthError.js";
 
 export class BrowserExtensionLocalStorage extends LocalStorage {
     private allSettings: Record<string, unknown> = {};
@@ -26,24 +22,12 @@ export class BrowserExtensionLocalStorage extends LocalStorage {
         await super.initialize(correlationId);
     }
 
-    private ensureInitialized(): void {
-        if (!this.initialized) {
-            throw createBrowserAuthError(
-                BrowserAuthErrorCodes.uninitializedPublicClientApplication
-            );
-        }
-    }
-
     override getItem(key: string): string | null {
-        this.ensureInitialized();
-
         const item = this.allSettings[key];
         return item && typeof item === "string" ? item : null;
     }
 
     override setItem(key: string, value: string): void {
-        this.ensureInitialized();
-
         this.allSettings[key] = value;
         chrome.storage.local
             .set({
@@ -60,8 +44,6 @@ export class BrowserExtensionLocalStorage extends LocalStorage {
     }
 
     override removeItem(key: string): void {
-        this.ensureInitialized();
-
         super.removeItem(key);
 
         delete this.allSettings[key];
@@ -78,12 +60,10 @@ export class BrowserExtensionLocalStorage extends LocalStorage {
     }
 
     override getKeys(): string[] {
-        this.ensureInitialized();
         return Object.keys(this.allSettings);
     }
 
     override containsKey(key: string): boolean {
-        this.ensureInitialized();
         return this.allSettings.hasOwnProperty(key);
     }
 
