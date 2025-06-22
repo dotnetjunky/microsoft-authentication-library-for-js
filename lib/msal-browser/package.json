@@ -1,5 +1,5 @@
 {
-  "name": "@dotnetjunky/msal-browser",
+  "name": "@dotnetjunky/msal-browser-extension",
   "author": {
     "name": "Luan Nguyen",
     "email": "kinhln@microsoft.com"
@@ -9,7 +9,7 @@
     "type": "git",
     "url": "https://github.com/dotnetjunky/microsoft-authentication-library-for-js"
   },
-  "version": "4.14.0",
+  "version": "1.0.0",
   "description": "Microsoft Authentication Library for js",
   "keywords": [
     "implicit",

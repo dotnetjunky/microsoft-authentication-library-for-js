@@ -49,8 +49,6 @@ import {
     StaticCacheKeys,
     TemporaryCacheKeys,
 } from "../utils/BrowserConstants.js";
-import { LocalStorage } from "./LocalStorage.js";
-import { SessionStorage } from "./SessionStorage.js";
 import { MemoryStorage } from "./MemoryStorage.js";
 import { BrowserExtensionLocalStorage } from "./BrowserExtensionLocalStorage.js";
 import { IWindowStorage } from "./IWindowStorage.js";
@@ -217,22 +215,6 @@ export class BrowserCacheManager extends CacheManager {
             this.logger,
             this.performanceClient
         )(key, JSON.stringify(account), correlationId, timestamp);
-        const wasAdded = this.addAccountKeyToMap(key);
-
-        /**
-         * @deprecated - Remove this in next major version in favor of more consistent LOGIN event
-         */
-        if (
-            this.cacheConfig.cacheLocation ===
-                BrowserCacheLocation.LocalStorage &&
-            wasAdded
-        ) {
-            this.eventHandler.emitEvent(
-                EventType.ACCOUNT_ADDED,
-                undefined,
-                account.getAccountInfo()
-            );
-        }
     }
 
     /**
@@ -320,19 +302,6 @@ export class BrowserCacheManager extends CacheManager {
      */
     removeAccountContext(account: AccountEntity, correlationId: string): void {
         super.removeAccountContext(account, correlationId);
-
-        /**
-         * @deprecated - Remove this in next major version in favor of more consistent LOGOUT event
-         */
-        if (
-            this.cacheConfig.cacheLocation === BrowserCacheLocation.LocalStorage
-        ) {
-            this.eventHandler.emitEvent(
-                EventType.ACCOUNT_REMOVED,
-                undefined,
-                account.getAccountInfo()
-            );
-        }
     }
 
     /**
@@ -967,7 +936,7 @@ export class BrowserCacheManager extends CacheManager {
             // If temp cache item not found in session/memory, check local storage for items set by old versions
             if (
                 this.cacheConfig.cacheLocation ===
-                BrowserCacheLocation.LocalStorage
+                BrowserCacheLocation.BrowserExtensionStorage
             ) {
                 const item = this.browserStorage.getItem(key);
                 if (item) {
@@ -1420,10 +1389,6 @@ function getStorageImplementation(
 ): IWindowStorage<string> {
     try {
         switch (cacheLocation) {
-            case BrowserCacheLocation.LocalStorage:
-                return new LocalStorage(clientId, logger, performanceClient);
-            case BrowserCacheLocation.SessionStorage:
-                return new SessionStorage();
             case BrowserCacheLocation.BrowserExtensionStorage:
                 return new BrowserExtensionLocalStorage(
                     clientId,

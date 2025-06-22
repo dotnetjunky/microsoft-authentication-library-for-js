@@ -23,7 +23,6 @@ export class BrowserExtensionLocalStorage extends LocalStorage {
 
     override async initialize(correlationId: string): Promise<void> {
         this.allSettings = await chrome.storage.local.get(null);
-
         await super.initialize(correlationId);
     }
 
