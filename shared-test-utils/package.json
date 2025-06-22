@@ -5,7 +5,7 @@
   "private": true,
   "main": "src/index.ts",
   "devDependencies": {
-    "typescript": "^4.9.5",
+    "typescript": "^5.8.3",
     "@azure/msal-common": "^15.0.0"
   }
 }

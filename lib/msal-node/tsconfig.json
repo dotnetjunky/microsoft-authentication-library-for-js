@@ -36,7 +36,6 @@
     "resolveJsonModule": true,
     "jsx": "react",
     "esModuleInterop": true,
-    "suppressImplicitAnyIndexErrors": true,
     "experimentalDecorators": true,
     "types": [
       "jest",

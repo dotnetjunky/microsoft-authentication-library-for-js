@@ -6,11 +6,10 @@
         "compilerOptions": {
             "moduleResolution": "node",
             "module": "commonjs",
-            "target": "es2020",
+            "target": "es2022",
             "lib": [
-                "es2020",
+                "es2022",
                 "dom",
-                "es2020.promise"
             ],
             "outDir": "./dist",
             "esModuleInterop": true,
@@ -29,11 +28,10 @@
     "compilerOptions": {
         "moduleResolution": "nodenext",
         "module": "nodenext",
-        "target": "es2020",
+        "target": "es2022",
         "lib": [
-            "es2020",
+            "es2022",
             "dom",
-            "es2020.promise"
         ],
         "outDir": "./dist",
         "allowUnusedLabels": false,
