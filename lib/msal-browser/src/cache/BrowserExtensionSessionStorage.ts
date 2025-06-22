@@ -4,10 +4,6 @@
  */
 
 import { Logger } from "@azure/msal-common";
-import {
-    BrowserAuthErrorCodes,
-    createBrowserAuthError,
-} from "../error/BrowserAuthError.js";
 
 import { IWindowStorage } from "./IWindowStorage.js";
 
@@ -22,17 +18,7 @@ export class BrowserExtensionSessionStorage implements IWindowStorage<string> {
         this.initialized = true;
     }
 
-    private ensureInitialized(): void {
-        if (!this.initialized) {
-            throw createBrowserAuthError(
-                BrowserAuthErrorCodes.uninitializedPublicClientApplication
-            );
-        }
-    }
-
     getItem(key: string): string | null {
-        this.ensureInitialized();
-
         const item = this.allSettings[key];
         return item && typeof item === "string" ? item : null;
     }
@@ -42,8 +28,6 @@ export class BrowserExtensionSessionStorage implements IWindowStorage<string> {
     }
 
     setItem(key: string, value: string): void {
-        this.ensureInitialized();
-
         this.allSettings[key] = value;
         chrome.storage.session
             .set({
@@ -64,8 +48,6 @@ export class BrowserExtensionSessionStorage implements IWindowStorage<string> {
     }
 
     removeItem(key: string): void {
-        this.ensureInitialized();
-
         delete this.allSettings[key];
         chrome.storage.session
             .remove(key)
@@ -80,12 +62,10 @@ export class BrowserExtensionSessionStorage implements IWindowStorage<string> {
     }
 
     getKeys(): string[] {
-        this.ensureInitialized();
         return Object.keys(this.allSettings);
     }
 
     containsKey(key: string): boolean {
-        this.ensureInitialized();
         return this.allSettings.hasOwnProperty(key);
     }
 }
