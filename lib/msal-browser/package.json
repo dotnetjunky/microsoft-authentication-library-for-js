@@ -9,7 +9,7 @@
     "type": "git",
     "url": "https://github.com/dotnetjunky/microsoft-authentication-library-for-js"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "This package is a fork of Microsoft Authentication Library for js, which allows storing cached tokens in the extension's local storage. This package is not affiliated with Microsoft.",
   "keywords": [
     "implicit",
