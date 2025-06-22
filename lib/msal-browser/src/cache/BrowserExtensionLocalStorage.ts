@@ -25,12 +25,11 @@ import {
     BrowserAuthErrorCodes,
     createBrowserAuthError,
 } from "../error/BrowserAuthError.js";
-import { SameSiteOptions } from "./CookieStorage.js";
 import { IWindowStorage } from "./IWindowStorage.js";
 import { MemoryStorage } from "./MemoryStorage.js";
 import { getAccountKeys, getTokenKeys } from "./CacheHelpers.js";
 import { StaticCacheKeys } from "../utils/BrowserConstants.js";
-import { BrowserExtensionCookieStorage } from "./BrowserExtensionCookieStorage.js";
+import { CookieStorage, SameSiteOptions } from "./CookieStorage.js";
 
 const ENCRYPTION_KEY = "msal.cache.encryption";
 
@@ -68,9 +67,11 @@ export class BrowserExtensionLocalStorage implements IWindowStorage<string> {
     }
 
     async initialize(correlationId: string): Promise<void> {
-        const cookies = new BrowserExtensionCookieStorage();
+        this.allSettings = await chrome.storage.local.get(null);
 
-        const cookieString = await cookies.getItem(ENCRYPTION_KEY);
+        const cookies = new CookieStorage();
+        const cookieString = cookies.getItem(ENCRYPTION_KEY);
+
         let parsedCookie = { key: "", id: "" };
         if (cookieString) {
             try {
@@ -137,17 +138,14 @@ export class BrowserExtensionLocalStorage implements IWindowStorage<string> {
                 key: keyStr,
             };
 
-            await cookies.setItem(
+            cookies.setItem(
                 ENCRYPTION_KEY,
                 JSON.stringify(cookieData),
                 0, // Expiration - 0 means cookie will be cleared at the end of the browser session
-                true, // Secure flag
-                SameSiteOptions.None // SameSite must be None to support iframed apps
+                false, // Secure flag
+                SameSiteOptions.Lax // SameSite must be None to support iframed apps
             );
         }
-
-        // Register listener for cache updates in other tabs
-        this.allSettings = await chrome.storage.local.get(null);
 
         this.initialized = true;
     }
@@ -168,6 +166,18 @@ export class BrowserExtensionLocalStorage implements IWindowStorage<string> {
 
     setItem(key: string, value: string): void {
         this.allSettings[key] = value;
+        chrome.storage.local
+            .set({
+                [key]: value,
+            })
+            .then(() => {
+                this.logger.trace(`Set item in local storage: ${key}`);
+            })
+            .catch((error) => {
+                this.logger.error(
+                    `Failed to set item in local storage: ${error}`
+                );
+            });
     }
 
     async setUserData(
@@ -205,6 +215,16 @@ export class BrowserExtensionLocalStorage implements IWindowStorage<string> {
             this.memoryStorage.removeItem(key);
         }
         delete this.allSettings[key];
+        chrome.storage.local
+            .remove(key)
+            .then(() => {
+                this.logger.trace(`Removed item from local storage: ${key}`);
+            })
+            .catch((error) => {
+                this.logger.error(
+                    `Failed to remove item from local storage: ${error}`
+                );
+            });
     }
 
     getKeys(): string[] {
@@ -230,14 +250,24 @@ export class BrowserExtensionLocalStorage implements IWindowStorage<string> {
         tokenKeys.refreshToken.forEach((key) => this.removeItem(key));
 
         // Clean up anything left
-        this.getKeys().forEach((cacheKey: string) => {
-            if (
+        const keysToRemove = this.getKeys().filter(
+            (cacheKey) =>
                 cacheKey.startsWith(Constants.CACHE_PREFIX) ||
                 cacheKey.indexOf(this.clientId) !== -1
-            ) {
-                this.removeItem(cacheKey);
-            }
-        });
+        );
+
+        chrome.storage.local
+            .remove(keysToRemove)
+            .then(() => {
+                this.logger.trace(
+                    `Removed ${keysToRemove.length} items from local storage`
+                );
+            })
+            .catch((error) => {
+                this.logger.error(
+                    `Failed to remove items from local storage: ${error}`
+                );
+            });
     }
 
     /**
@@ -374,40 +404,5 @@ export class BrowserExtensionLocalStorage implements IWindowStorage<string> {
         }
 
         return context;
-    }
-
-    private updateCache(event: MessageEvent): void {
-        this.logger.trace("Updating internal cache from broadcast event");
-        const perfMeasurement = this.performanceClient.startMeasurement(
-            PerformanceEvents.LocalStorageUpdated
-        );
-        perfMeasurement.add({ isBackground: true });
-
-        const { key, value, context } = event.data;
-        if (!key) {
-            this.logger.error("Broadcast event missing key");
-            perfMeasurement.end({ success: false, errorCode: "noKey" });
-            return;
-        }
-
-        if (context && context !== this.clientId) {
-            this.logger.trace(
-                `Ignoring broadcast event from clientId: ${context}`
-            );
-            perfMeasurement.end({
-                success: false,
-                errorCode: "contextMismatch",
-            });
-            return;
-        }
-
-        if (!value) {
-            this.memoryStorage.removeItem(key);
-            this.logger.verbose("Removed item from internal cache");
-        } else {
-            this.memoryStorage.setItem(key, value);
-            this.logger.verbose("Updated item in internal cache");
-        }
-        perfMeasurement.end({ success: true });
     }
 }
