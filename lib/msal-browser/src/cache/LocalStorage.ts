@@ -51,11 +51,11 @@ type EncryptedData = {
 };
 
 export class LocalStorage implements IWindowStorage<string> {
-    private clientId: string;
-    private initialized: boolean;
-    private memoryStorage: MemoryStorage<string>;
-    private performanceClient: IPerformanceClient;
-    private logger: Logger;
+    protected clientId: string;
+    protected initialized: boolean;
+    protected memoryStorage: MemoryStorage<string>;
+    protected performanceClient: IPerformanceClient;
+    protected logger: Logger;
     private encryptionCookie?: EncryptionCookie;
     private broadcast: BroadcastChannel;
 
