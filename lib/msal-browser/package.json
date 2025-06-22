@@ -1,16 +1,15 @@
 {
-  "name": "@azure/msal-browser",
+  "name": "@dotnetjunky/msal-browser",
   "author": {
-    "name": "Microsoft",
-    "email": "nugetaad@microsoft.com",
-    "url": "https://www.microsoft.com"
+    "name": "Luan Nguyen",
+    "email": "kinhln@microsoft.com"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AzureAD/microsoft-authentication-library-for-js.git"
+    "url": "https://github.com/dotnetjunky/microsoft-authentication-library-for-js"
   },
-  "version": "4.13.2",
+  "version": "4.14.0",
   "description": "Microsoft Authentication Library for js",
   "keywords": [
     "implicit",
