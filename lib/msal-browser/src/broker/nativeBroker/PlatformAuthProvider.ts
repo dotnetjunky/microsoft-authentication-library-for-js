@@ -19,10 +19,6 @@ import { PlatformAuthExtensionHandler } from "./PlatformAuthExtensionHandler.js"
 import { IPlatformAuthHandler } from "./IPlatformAuthHandler.js";
 import { PlatformAuthDOMHandler } from "./PlatformAuthDOMHandler.js";
 import { createNewGuid } from "../../crypto/BrowserCrypto.js";
-import {
-    BrowserCacheLocation,
-    PLATFORM_AUTH_DOM_SUPPORT,
-} from "../../utils/BrowserConstants.js";
 
 /**
  * Checks if the platform broker is available in the current environment.
@@ -61,7 +57,7 @@ export async function getPlatformAuthProvider(
 ): Promise<IPlatformAuthHandler | undefined> {
     logger.trace("getPlatformAuthProvider called", correlationId);
 
-    const enablePlatformBrokerDOMSupport = isDomEnabledForPlatformAuth();
+    const enablePlatformBrokerDOMSupport = true;
 
     logger.trace(
         "Has client allowed platform auth via DOM API: " +
@@ -97,22 +93,6 @@ export async function getPlatformAuthProvider(
         logger.trace("Platform auth not available", e as string);
     }
     return platformAuthProvider;
-}
-
-/**
- * Returns true if the DOM API support for platform auth is enabled in session storage
- * @returns boolean
- * @deprecated
- */
-export function isDomEnabledForPlatformAuth(): boolean {
-    let sessionStorage: Storage | undefined;
-    try {
-        sessionStorage = window[BrowserCacheLocation.SessionStorage];
-        // Mute errors if it's a non-browser environment or cookies are blocked.
-        return sessionStorage?.getItem(PLATFORM_AUTH_DOM_SUPPORT) === "true";
-    } catch (e) {
-        return false;
-    }
 }
 
 /**

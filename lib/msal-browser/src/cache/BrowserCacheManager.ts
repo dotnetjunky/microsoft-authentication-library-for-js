@@ -1391,7 +1391,7 @@ function getStorageImplementation(
     try {
         switch (cacheLocation) {
             case BrowserCacheLocation.BrowserExtensionSessionStorage:
-                return new BrowserExtensionSessionStorage();
+                return new BrowserExtensionSessionStorage(logger);
             case BrowserCacheLocation.BrowserExtensionLocalStorage:
                 return new BrowserExtensionLocalStorage(
                     clientId,

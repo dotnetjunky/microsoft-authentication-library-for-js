@@ -310,14 +310,16 @@ export function buildConfiguration(
 
     // Default cache options for browser
     const DEFAULT_CACHE_OPTIONS: Required<CacheOptions> = {
-        cacheLocation: BrowserCacheLocation.SessionStorage,
-        temporaryCacheLocation: BrowserCacheLocation.SessionStorage,
+        cacheLocation: BrowserCacheLocation.BrowserExtensionSessionStorage,
+        temporaryCacheLocation:
+            BrowserCacheLocation.BrowserExtensionSessionStorage,
         storeAuthStateInCookie: false,
         secureCookies: false,
         // Default cache migration to true if cache location is localStorage since entries are preserved across tabs/windows. Migration has little to no benefit in sessionStorage and memoryStorage
         cacheMigrationEnabled:
             userInputCache &&
-            userInputCache.cacheLocation === BrowserCacheLocation.LocalStorage
+            userInputCache.cacheLocation ===
+                BrowserCacheLocation.BrowserExtensionLocalStorage
                 ? true
                 : false,
         claimsBasedCachingEnabled: false,

@@ -1839,7 +1839,7 @@ export class StandardController implements IController {
     enableAccountStorageEvents(): void {
         if (
             this.config.cache.cacheLocation !==
-            BrowserCacheLocation.LocalStorage
+            BrowserCacheLocation.BrowserExtensionLocalStorage
         ) {
             this.logger.info(
                 "Account storage events are only available when cacheLocation is set to localStorage"
@@ -1857,7 +1857,7 @@ export class StandardController implements IController {
     disableAccountStorageEvents(): void {
         if (
             this.config.cache.cacheLocation !==
-            BrowserCacheLocation.LocalStorage
+            BrowserCacheLocation.BrowserExtensionLocalStorage
         ) {
             this.logger.info(
                 "Account storage events are only available when cacheLocation is set to localStorage"

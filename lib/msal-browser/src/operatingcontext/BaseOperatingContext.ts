@@ -11,7 +11,6 @@ import {
 } from "../config/Configuration.js";
 import { version, name } from "../packageMetadata.js";
 import {
-    BrowserCacheLocation,
     LOG_LEVEL_CACHE_KEY,
     LOG_PII_CACHE_KEY,
 } from "../utils/BrowserConstants.js";
@@ -65,7 +64,7 @@ export abstract class BaseOperatingContext {
 
         let sessionStorage: Storage | undefined;
         try {
-            sessionStorage = window[BrowserCacheLocation.SessionStorage];
+            sessionStorage = window["sessionStorage"];
             // Mute errors if it's a non-browser environment or cookies are blocked.
         } catch (e) {}
 
