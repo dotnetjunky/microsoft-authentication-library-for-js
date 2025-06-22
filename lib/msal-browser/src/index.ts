@@ -75,7 +75,7 @@ export { ITokenCache } from "./cache/ITokenCache.js";
 // Storage
 export { MemoryStorage } from "./cache/MemoryStorage.js";
 export { LocalStorage } from "./cache/LocalStorage.js";
-export { SessionStorage } from "./cache/SessionStorage.js";
+export { SessionStorage } from "./cache/BrowserExtensionSessionStorage.js";
 export { BrowserExtensionLocalStorage } from "./cache/BrowserExtensionLocalStorage.js";
 export { BrowserExtensionCookieStorage } from "./cache/BrowserExtensionCookieStorage.js";
 export { IWindowStorage } from "./cache/IWindowStorage.js";

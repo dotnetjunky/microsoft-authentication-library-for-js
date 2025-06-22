@@ -66,6 +66,7 @@ import { EventType } from "../event/EventType.js";
 import { EventHandler } from "../event/EventHandler.js";
 import { clearHash } from "../utils/BrowserUtils.js";
 import { version } from "../packageMetadata.js";
+import { BrowserExtensionSessionStorage } from "./BrowserExtensionSessionStorage.js";
 
 /**
  * This class implements the cache storage interface for MSAL through browser local or session storage.
@@ -936,7 +937,7 @@ export class BrowserCacheManager extends CacheManager {
             // If temp cache item not found in session/memory, check local storage for items set by old versions
             if (
                 this.cacheConfig.cacheLocation ===
-                BrowserCacheLocation.BrowserExtensionStorage
+                BrowserCacheLocation.BrowserExtensionLocalStorage
             ) {
                 const item = this.browserStorage.getItem(key);
                 if (item) {
@@ -1389,7 +1390,9 @@ function getStorageImplementation(
 ): IWindowStorage<string> {
     try {
         switch (cacheLocation) {
-            case BrowserCacheLocation.BrowserExtensionStorage:
+            case BrowserCacheLocation.BrowserExtensionSessionStorage:
+                return new BrowserExtensionSessionStorage();
+            case BrowserCacheLocation.BrowserExtensionLocalStorage:
                 return new BrowserExtensionLocalStorage(
                     clientId,
                     logger,

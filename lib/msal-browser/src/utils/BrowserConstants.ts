@@ -63,7 +63,8 @@ export type NativeExtensionMethod =
 
 export const BrowserCacheLocation = {
     MemoryStorage: "memoryStorage",
-    BrowserExtensionStorage: "browserExtensionStorage",
+    BrowserExtensionSessionStorage: "browserExtensionSessionStorage",
+    BrowserExtensionLocalStorage: "browserExtensionLocalStorage",
 } as const;
 export type BrowserCacheLocation =
     (typeof BrowserCacheLocation)[keyof typeof BrowserCacheLocation];
