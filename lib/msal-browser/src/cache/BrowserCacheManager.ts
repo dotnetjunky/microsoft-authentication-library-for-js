@@ -52,6 +52,7 @@ import {
 import { LocalStorage } from "./LocalStorage.js";
 import { SessionStorage } from "./SessionStorage.js";
 import { MemoryStorage } from "./MemoryStorage.js";
+import { BrowserExtensionLocalStorage } from "./BrowserExtensionLocalStorage.js";
 import { IWindowStorage } from "./IWindowStorage.js";
 import { PlatformAuthRequest } from "../broker/nativeBroker/PlatformAuthRequest.js";
 import { AuthenticationResult } from "../response/AuthenticationResult.js";
@@ -1423,6 +1424,12 @@ function getStorageImplementation(
                 return new LocalStorage(clientId, logger, performanceClient);
             case BrowserCacheLocation.SessionStorage:
                 return new SessionStorage();
+            case BrowserCacheLocation.BrowserExtensionStorage:
+                return new BrowserExtensionLocalStorage(
+                    clientId,
+                    logger,
+                    performanceClient
+                );
             case BrowserCacheLocation.MemoryStorage:
             default:
                 break;

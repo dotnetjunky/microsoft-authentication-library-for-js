@@ -65,6 +65,7 @@ export const BrowserCacheLocation = {
     LocalStorage: "localStorage",
     SessionStorage: "sessionStorage",
     MemoryStorage: "memoryStorage",
+    BrowserExtensionStorage: "browserExtensionStorage",
 } as const;
 export type BrowserCacheLocation =
     (typeof BrowserCacheLocation)[keyof typeof BrowserCacheLocation];

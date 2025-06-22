@@ -95,6 +95,7 @@
     "@rollup/plugin-typescript": "^11.0.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^20.3.1",
+    "@types/chrome": "^0.0.326",
     "dotenv": "^8.2.0",
     "eslint-config-msal": "file:../../shared-configs/eslint-config-msal",
     "fake-indexeddb": "^3.1.3",
