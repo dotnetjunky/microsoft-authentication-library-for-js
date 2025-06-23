@@ -150,8 +150,8 @@ export class LocalStorage implements IWindowStorage<string> {
                 ENCRYPTION_KEY,
                 JSON.stringify(cookieData),
                 0, // Expiration - 0 means cookie will be cleared at the end of the browser session
-                true, // Secure flag
-                SameSiteOptions.None // SameSite must be None to support iframed apps
+                this.isCookieSecure, // Secure flag
+                this.isCookieSecure ? SameSiteOptions.None : SameSiteOptions.Lax // SameSite must be None to support iframed apps
             );
         }
 
@@ -159,6 +159,10 @@ export class LocalStorage implements IWindowStorage<string> {
         this.broadcast.addEventListener("message", this.updateCache.bind(this));
 
         this.initialized = true;
+    }
+
+    protected get isCookieSecure(): boolean {
+        return true;
     }
 
     getItem(key: string): string | null {

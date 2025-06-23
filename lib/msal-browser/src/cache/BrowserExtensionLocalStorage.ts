@@ -80,4 +80,12 @@ export class BrowserExtensionLocalStorage extends LocalStorage {
             );
         });
     }
+
+    protected override get isCookieSecure(): boolean {
+        /*
+         * Because browser extension has the protocol "chrome-extension",
+         * it does not support secure cookies.
+         */
+        return false;
+    }
 }
