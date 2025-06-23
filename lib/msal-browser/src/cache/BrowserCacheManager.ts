@@ -216,6 +216,23 @@ export class BrowserCacheManager extends CacheManager {
             this.logger,
             this.performanceClient
         )(key, JSON.stringify(account), correlationId, timestamp);
+
+        const wasAdded = this.addAccountKeyToMap(key);
+
+        /**
+         * @deprecated - Remove this in next major version in favor of more consistent LOGIN event
+         */
+        if (
+            this.cacheConfig.cacheLocation ===
+                BrowserCacheLocation.BrowserExtensionLocalStorage &&
+            wasAdded
+        ) {
+            this.eventHandler.emitEvent(
+                EventType.ACCOUNT_ADDED,
+                undefined,
+                account.getAccountInfo()
+            );
+        }
     }
 
     /**
@@ -303,6 +320,20 @@ export class BrowserCacheManager extends CacheManager {
      */
     removeAccountContext(account: AccountEntity, correlationId: string): void {
         super.removeAccountContext(account, correlationId);
+
+        /**
+         * @deprecated - Remove this in next major version in favor of more consistent LOGOUT event
+         */
+        if (
+            this.cacheConfig.cacheLocation ===
+            BrowserCacheLocation.BrowserExtensionLocalStorage
+        ) {
+            this.eventHandler.emitEvent(
+                EventType.ACCOUNT_REMOVED,
+                undefined,
+                account.getAccountInfo()
+            );
+        }
     }
 
     /**

@@ -55,8 +55,7 @@ export class CookieStorage implements IWindowStorage<string> {
         )};path=/;SameSite=${sameSite};`;
 
         if (cookieLifeDays) {
-            const expireTime =
-                getCookieExpirationTime(cookieLifeDays).toUTCString();
+            const expireTime = getCookieExpirationTime(cookieLifeDays);
             cookieStr += `expires=${expireTime};`;
         }
 
@@ -99,10 +98,10 @@ export class CookieStorage implements IWindowStorage<string> {
  * Get cookie expiration time
  * @param cookieLifeDays
  */
-export function getCookieExpirationTime(cookieLifeDays: number): Date {
+export function getCookieExpirationTime(cookieLifeDays: number): string {
     const today = new Date();
     const expr = new Date(
         today.getTime() + cookieLifeDays * COOKIE_LIFE_MULTIPLIER
     );
-    return expr;
+    return expr.toUTCString();
 }

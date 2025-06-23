@@ -105,7 +105,7 @@ describe("CookieStorage tests", () => {
         const expectedDate = new Date(
             currentTime + cookieLifeDays * COOKIE_LIFE_MULTIPLIER
         );
-        expect(getCookieExpirationTime(cookieLifeDays).toUTCString()).toEqual(
+        expect(getCookieExpirationTime(cookieLifeDays)).toEqual(
             expectedDate.toUTCString()
         );
     });
