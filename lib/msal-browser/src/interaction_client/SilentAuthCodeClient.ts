@@ -12,6 +12,7 @@ import {
     PerformanceEvents,
     invokeAsync,
     CommonAuthorizationUrlRequest,
+    AuthorizationCodeClient,
 } from "@azure/msal-common/browser";
 import { StandardInteractionClient } from "./StandardInteractionClient.js";
 import { BrowserConfiguration } from "../config/Configuration.js";
@@ -24,7 +25,6 @@ import {
 } from "../error/BrowserAuthError.js";
 import { InteractionType, ApiId } from "../utils/BrowserConstants.js";
 import { AuthorizationCodeRequest } from "../request/AuthorizationCodeRequest.js";
-import { HybridSpaAuthorizationCodeClient } from "./HybridSpaAuthorizationCodeClient.js";
 import { AuthenticationResult } from "../response/AuthenticationResult.js";
 import { InteractionHandler } from "../interaction_handler/InteractionHandler.js";
 import { IPlatformAuthHandler } from "../broker/nativeBroker/IPlatformAuthHandler.js";
@@ -106,8 +106,7 @@ export class SilentAuthCodeClient extends StandardInteractionClient {
                 requestExtraQueryParameters: silentRequest.extraQueryParameters,
                 account: silentRequest.account,
             });
-            const authClient: HybridSpaAuthorizationCodeClient =
-                new HybridSpaAuthorizationCodeClient(clientConfig);
+            const authClient = new AuthorizationCodeClient(clientConfig);
             this.logger.verbose("Auth code client created");
 
             // Create silent handler
